@@ -27,6 +27,7 @@ const client = new ApolloClient({
     defaults: defaultState,
   },
 });
+
 ReactDOM.render(
   <ApolloProvider client={client}>
     <App />

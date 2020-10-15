@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import { Card, Typography,Button,CardContent,CardMedia } from "@material-ui/core";
 import Rating from "./Rating";
 
 const useStyles = makeStyles((theme) => ({
@@ -13,17 +10,27 @@ const useStyles = makeStyles((theme) => ({
   details: {
     display: "flex",
     flexDirection: "column",
+    width: "-webkit-fill-available",
   },
   content: {
     flex: "1 0 auto",
   },
+  button: {
+    padding: 10,
+    marginRight: theme.spacing(1),
+  },
   cover: {
     width: 151,
   },
+  rating: {
+    display: "flex",
+    justifyContent: "left",
+    paddingLeft: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+  },
   controls: {
     display: "flex",
-    alignItems: "left",
-    paddingLeft: theme.spacing(1),
+    justifyContent: "right",
     paddingBottom: theme.spacing(1),
   },
   playIcon: {
@@ -32,23 +39,28 @@ const useStyles = makeStyles((theme) => ({
   },
   imagePlaceholder: {
     display: "flex",
-    minHeight: 100,
-    minWidth:150,
-    backgroundColor:  'lightgrey'
+    minHeight: 225,
+    minWidth: 150,
+    backgroundColor: "lightgrey",
   },
-  container:{
-    padding:16,
-    backgroundColor: 'white'
-  }
+  container: {
+    padding: 16,
+    backgroundColor: "white",
+  },
 }));
 
 export default function MediaCard({
-rating, title,summary, publisher, image_url, author, count
+  rating,
+  title,
+  summary,
+  publisher,
+  image_url,
+  author,
+  count,
 }) {
   const classes = useStyles();
-  const theme = useTheme();
 
-// const image = backdrop_path? backdrop_path: poster_path
+  // const image = backdrop_path? backdrop_path: poster_path
   return (
     <div className={classes.container}>
       <Card className={classes.root}>
@@ -81,8 +93,22 @@ rating, title,summary, publisher, image_url, author, count
               {summary}{" "}
             </Typography>
           </CardContent>
-          <Rating voteCount={count} voteAverage={rating}></Rating>
-          <div className={classes.controls}></div>
+          <div className={classes.rating}>  
+          
+            <Rating voteCount={count} voteAverage={rating}></Rating>
+          {/* </div>
+          <div className={classes.controls}> */}
+            <Button
+              className={classes.button}
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+              variant="contained"
+              color="secondary"
+            >
+              Review this Book
+            </Button>
+          </div>
         </div>
       </Card>
     </div>

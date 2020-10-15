@@ -1,17 +1,20 @@
 import React from "react";
-import { ApolloConsumer, useMutation } from "@apollo/client";
 import Button from "@material-ui/core/Button";
+import { gql, useMutation, useQuery, makeVar } from "@apollo/client";
+import { ApolloConsumer } from "@apollo/client";
+import { makeStyles } from "@material-ui/core/styles";
 
-const WithApolloClient = () => (
-  <ApolloConsumer>
-    {(client) => "We have access to the client!" /* do stuff here */}
-  </ApolloConsumer>
-);
-
-import { gql, useMutation, makeVar } from "@apollo/client";
+const useStyles = makeStyles((theme) => ({
+  button: {
+    padding: 10,
+  },
+  content: {
+    flex: "1 0 auto",
+  },
+}));
 
 const SEED_DB = gql`
-  mutation insertNewBooks($objects: [books_insert_input!]!) {
+  mutation insertNewBooks($objects:[books_insert_input!]!) {
     insert_books(objects: $objects) {
       returning {
         id
@@ -24,47 +27,52 @@ const SEED_DB = gql`
 export const bookItems = makeVar([]);
 
 export default function Seed() {
-  const [seedData, { data }] = useMutation(SEED_DB);
-  console.log("data", data);
-  bookItems(data);
+  const classes = useStyles();
+    const [seedData, { data }] = useMutation(SEED_DB);
+
+const readFile = () => {
+  fetch("https://raw.githubusercontent.com/moonvd/hw/master/books.txt")
+    .then((r) => {
+      return r.text();
+    })
+    .then((text) => {
+      const entries = text.split(/\n{2,}/g);
+      let formattedEntries = entries.map((entry) => {
+        const lines = entry.split(/\n/g);
+        const [title, authorPublisher, summary, image_url] = lines;
+        const [author, publisher] = authorPublisher.split("|");
+        return {
+          author,
+          publisher,
+          title,
+          summary,
+          image_url,
+        };
+      });
+      seedData({ variables: {objects:formattedEntries} });
+      bookItems(formattedEntries);
+    });
+};
   return (
-    <Button
-      onClick={(e) => {
-        e.preventDefault();
-        seedData({ variables: { type: input.value } });
-      }}
-      variant="contained"
-      color="secondary"
-    >
-      Seed Data
-    </Button>
+    <>
+      
+      <div style={{ width: 10 }}></div>
+      <Button
+        className={classes.button}
+        onClick={(e) => {
+          e.preventDefault();
+          //   readThatFile();
+          readFile();
+        }}
+        variant="contained"
+        color="secondary"
+      >
+        read file
+      </Button>
+    </>
   );
 }
-
-// const SEED_DB = gql`
-//   mutation insertNewBooks(
-//     $author: String!
-//     $id: Int!
-//     $image_url: String!
-//     $publisher: String!
-//     $summary: String!
-//     $title: String!
-//   ) {
-//     insert_books(
-//       objects: {
-//         author: $author
-//         id: $id
-//         image_url: $image_url
-//         publisher: $publisher
-//         summary: $summary
-//         title: $title
-//       }
-//     ) {
-//       returning {
-//         id
-//         title
-//         author
-//       }
-//     }
-//   }
-// `;
+// We can see how this component could be easily modified to upload a book or any number of books from the client or as an initial database seed from another server => GQL server
+// {"summary": "blahhhhhh", "publisher": "blah publisher", "title": "grand yarn the 3rd",
+//   "image_url": "https://s1.nyt.com/du/books/images/9780525536291.jpg","author": "grant willison"
+// }

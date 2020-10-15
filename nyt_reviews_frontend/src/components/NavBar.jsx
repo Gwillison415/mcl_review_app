@@ -8,6 +8,8 @@ import { fade, makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import SwipeableDrawer from "./SwipeableDrawer";
 import {SearchBar} from "./SearchBar";
+import Seed from "./Seed";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -98,11 +100,17 @@ export default function NavBar() {
           <Typography className={classes.title} variant="h6" noWrap>
             Review These Books!
           </Typography>
+          <Seed></Seed>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-            <SearchBar addSearchResults={({string}) => {console.log("addSearchResults string=", string);}} classes={classes}></SearchBar>
+            <SearchBar
+              addSearchResults={({ string }) => {
+                console.log("addSearchResults string=", string);
+              }}
+              classes={classes}
+            ></SearchBar>
           </div>{" "}
         </Toolbar>
         <SwipeableDrawer

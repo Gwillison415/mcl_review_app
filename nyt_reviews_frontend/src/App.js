@@ -4,7 +4,7 @@ import About from "./components/About";
 import "./App.css";
 import { SearchResults } from "./components/SearchResults";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-
+import BooksList from "./components/BooksList";
 function App() {
   return (
     <>
@@ -20,7 +20,7 @@ function App() {
               <SearchResults></SearchResults>
             </Route>
             <Route path="/">
-              <SearchResults></SearchResults>
+              <BooksList />
             </Route>
           </Switch>
         </div>
