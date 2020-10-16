@@ -10,7 +10,7 @@ import {
   split,
   HttpLink,
 } from "@apollo/client";
-
+import { NavContextProvider } from "./components/context/NavContext";
 const cache = new InMemoryCache({});
 const defaultState = {
   queries: {},
@@ -30,7 +30,9 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <App />
+    <NavContextProvider>
+      <App />
+    </NavContextProvider>
   </ApolloProvider>,
   document.getElementById("root")
 );

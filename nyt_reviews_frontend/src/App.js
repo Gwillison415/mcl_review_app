@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import NavBar from "./components/NavBar";
 import About from "./components/About";
 import "./App.css";
 import { SearchResults } from "./components/SearchResults";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import BooksList from "./components/BooksList";
+import { NavContext } from "./components/context/NavContext";
 function App() {
+  const [appPage] = useContext(NavContext);
   return (
     <>
       <Router>
+        <div>whichPage = {appPage}</div>
         <NavBar></NavBar>
         <div className="App">
           <Switch>
