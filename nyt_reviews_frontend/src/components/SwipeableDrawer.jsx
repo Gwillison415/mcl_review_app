@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
@@ -10,7 +10,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
 import { BrowserRouter as Router, Link } from "react-router-dom";
-
+import { NavContext } from "./context/NavContext";
 const useStyles = makeStyles({
   list: {
     width: 250,
@@ -23,6 +23,7 @@ const useStyles = makeStyles({
 export default function SwipeableTempDrawer({ toggleDrawer, drawerState }) {
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
   const classes = useStyles();
+  const [appPage, setAppPage] = useContext(NavContext);
   const list = (anchor) => (
     <div
       className={clsx(classes.list, {
@@ -33,10 +34,10 @@ export default function SwipeableTempDrawer({ toggleDrawer, drawerState }) {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {["About", "Search"].map((text, index) => {
+        {["About", "Reviews", "Books"].map((text, index) => {
            text = text.toLowerCase();
           return (
-            <Link key={text} to={`/${text}`}>
+            <Link onClick={()=>{setAppPage(text)}} key={text} to={`/${text}`}>
               <ListItem button>
                 <ListItemIcon>
                   {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}

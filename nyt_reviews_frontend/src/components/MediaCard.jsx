@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Card, Typography,Button,CardContent,CardMedia } from "@material-ui/core";
+import {
+  Card,
+  Typography,
+  Button,
+  CardContent,
+  CardMedia,
+  Accordion,
+  AccordionDetails,
+} from "@material-ui/core";
 import Rating from "./Rating";
 
 const useStyles = makeStyles((theme) => ({
@@ -57,9 +65,17 @@ export default function MediaCard({
   image_url,
   author,
   count,
+  id,
+  dispatch,
 }) {
   const classes = useStyles();
-
+  const reviewBook = (payload) => {
+    dispatch({
+      type: "REVIEW_BOOK",
+      payload,
+      appPage: "/reviews",
+    });
+  };
   // const image = backdrop_path? backdrop_path: poster_path
   return (
     <div className={classes.container}>
@@ -93,21 +109,32 @@ export default function MediaCard({
               {summary}{" "}
             </Typography>
           </CardContent>
-          <div className={classes.rating}>  
-          
+          <div className={classes.rating}>
             <Rating voteCount={count} voteAverage={rating}></Rating>
-          {/* </div>
+            {/* </div>
           <div className={classes.controls}> */}
-            <Button
-              className={classes.button}
-              onClick={(e) => {
-                e.preventDefault();
-              }}
-              variant="contained"
-              color="secondary"
-            >
-              Review this Book
-            </Button>
+            {dispatch && (
+              <Button
+                className={classes.button}
+                onClick={(e) => {
+                  e.preventDefault();
+                  reviewBook({
+                    rating,
+                    title,
+                    summary,
+                    publisher,
+                    image_url,
+                    author,
+                    count,
+                    id,
+                  });
+                }}
+                variant="contained"
+                color="secondary"
+              >
+                Review this Book
+              </Button>
+            )}
           </div>
         </div>
       </Card>

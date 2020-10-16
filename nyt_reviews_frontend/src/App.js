@@ -7,7 +7,9 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import BooksList from "./components/BooksList";
 import { NavContext } from "./components/context/NavContext";
 function App() {
-  const [appPage] = useContext(NavContext);
+  const [navContext] = useContext(NavContext);
+  const { appPage } = navContext;
+  console.log("navContext", navContext);
   return (
     <>
       <Router>
@@ -18,6 +20,9 @@ function App() {
             <Route path="/about">
               {" "}
               <About></About>
+            </Route>
+            <Route path="/reviews">
+              <SearchResults></SearchResults>
             </Route>
             <Route path="/search">
               <SearchResults></SearchResults>
