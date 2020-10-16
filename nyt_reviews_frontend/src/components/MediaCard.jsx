@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Card,
@@ -13,11 +13,11 @@ import {
   Chip,
   Divider,
 } from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-
-import clsx from "clsx";
+import { gql, useMutation, useQuery, makeVar } from "@apollo/client";
+import { NavContext } from "./context/NavContext";
 
 import Rating from "./Rating";
+import Form from "./Form";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,6 +65,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const ADD_REVIEW_BY_USER = gql`
+  mutation addReviewByUser($objects: [reviews_insert_input!]!) {
+    insert_reviews(objects: $objects) {
+      affected_rows
+    }
+  }
+`;
+
 export default function MediaCard({
   rating,
   title,
@@ -74,42 +82,65 @@ export default function MediaCard({
   author,
   count,
   id,
+  userRating,
   dispatch,
 }) {
-  rating =3.5
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
+  const [formValues, setFormValues] = useState({
+    reviewText: "",
+    reviewTitle: "",
+    rating: userRating,
+  });
+  const [navContext] = useContext(NavContext);
+  const { user } = navContext;
+  const [addReview, { data }] = useMutation(ADD_REVIEW_BY_USER);
+
   function handleAccordion(event) {
-    console.log('event.target', event.target)
     const {
       target: { type },
     } = event;
-    console.log("type", type);
-    if (type === "fieldset" || type === "button") {
+    if (
+      type === "fieldset" ||
+      type === "button" ||
+      type === "input" ||
+      type === "radio" ||
+      type === "span"
+    ) {
       setExpanded(true);
+    } else {
+      setExpanded(false);
     }
   }
-    const callToAction = count
-      ? "Review this book"
-      : "Be the first to review!";
+  const callToAction = count ? "Review this book" : "Be the first to review!";
 
-  const reviewBook = (payload) => {
+  const reviewBook = (newProps) => {
+    const payload = {
+      rating,
+      title,
+      summary,
+      publisher,
+      image_url,
+      author,
+      count,
+      id,
+      ...newProps,
+    };
     dispatch({
       type: "REVIEW_BOOK",
       payload,
       appPage: "/reviews",
     });
   };
-  // const image = backdrop_path? backdrop_path: poster_path
+
   return (
     <div className={classes.container}>
-      <Accordion expanded={expanded} onChange={handleAccordion}>
-        <AccordionSummary
-          // expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1c-content"
-          id="panel1c-header"
-        >
-          {/* <Card className={classes.root}> */}
+      <Accordion
+        TransitionProps={{ unmountOnExit: true }}
+        expanded={expanded}
+        onChange={handleAccordion}
+      >
+        <AccordionSummary aria-controls="panel1c-content" id="panel1c-header">
           <div className={classes.imagePlaceholder}>
             {image_url && (
               <CardMedia
@@ -140,22 +171,20 @@ export default function MediaCard({
               </Typography>
             </CardContent>
             <div className={classes.rating}>
-              <Rating voteCount={count} voteAverage={rating}></Rating>
+              <Rating
+                onStartReview={reviewBook}
+                id={id}
+                voteCount={count}
+                voteAverage={rating}
+              ></Rating>
               {dispatch && (
                 <Button
                   className={classes.button}
                   onClick={(e) => {
+                    setExpanded(true);
+
+                    reviewBook({});
                     e.preventDefault();
-                    reviewBook({
-                      rating,
-                      title,
-                      summary,
-                      publisher,
-                      image_url,
-                      author,
-                      count,
-                      id,
-                    });
                   }}
                   variant="contained"
                   color="secondary"
@@ -165,30 +194,39 @@ export default function MediaCard({
               )}
             </div>
           </div>
-          {/* </Card> */}
         </AccordionSummary>
         <AccordionDetails className={classes.details}>
-          <div className={clsx(classes.column, classes.helper)}>
-            <Typography variant="caption">
-              Select your destination of choice
-              <br />
-            </Typography>
-          </div>
+          <Form
+            formValues={formValues}
+            setFormValues={setFormValues}
+            count={count}
+            id={id + "form"}
+          ></Form>
         </AccordionDetails>
         <Divider />
         <AccordionActions>
-          <Rating voteCount={count} voteAverage={rating}></Rating>
-
           <Button
             onClick={(e) => {
-              console.log("e.target", e.target);
+              setExpanded(false);
             }}
             size="small"
           >
             Cancel
           </Button>
-          <Button size="small" color="primary">
-            Save
+          <Button
+            onClick={(e) => {
+              addReview({
+                variables: {
+                  objects: [
+                    { ...formValues, user: { data: { id, name: user.name } } },
+                  ],
+                },
+              });
+            }}
+            size="small"
+            color="primary"
+          >
+            Save Review
           </Button>
         </AccordionActions>
       </Accordion>

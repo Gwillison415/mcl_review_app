@@ -14,7 +14,6 @@ function App() {
   return (
     <>
       <Router>
-        <Rating voteAverage={null} voteCount={null}></Rating>
         <NavBar></NavBar>
         <div className="App">
           <Switch>

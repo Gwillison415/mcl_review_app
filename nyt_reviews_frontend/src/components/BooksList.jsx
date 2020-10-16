@@ -6,22 +6,25 @@ import ProgressBar from "./ProgressBar";
 import { NavContext } from "./context/NavContext";
 
 const GET_BOOKS = gql`
-  query getAllBooks {
+  query getBooksAvgRating {
     books {
       author
       id
       image_url
       publisher
-      summary
-      title
+      reviews {
+        reviewTitle
+      }
       reviews_aggregate {
         aggregate {
+          count(distinct: false)
           avg {
             rating
           }
-          count
         }
       }
+      summary
+      title
     }
   }
 `;
@@ -35,14 +38,13 @@ export default function BooksList() {
   if (loading) return <ProgressBar/>;
   if (data) {
     const {books} = data
-    console.log('books', books)
     return (
       <div>
         {books.map((cardProps, idx) => {
           const { reviews_aggregate , ...topLevelCardProps} = cardProps
           const {
-            count,
             aggregate: {
+              count,
               avg: { rating },
             },
           } = reviews_aggregate;

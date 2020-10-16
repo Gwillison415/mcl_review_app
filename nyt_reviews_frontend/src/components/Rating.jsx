@@ -11,29 +11,25 @@ const useStyles = makeStyles((theme) => ({
     // zIndex: 99,
   },
 }));
-export default function SimpleRating({ voteAverage, voteCount }) {
+export default function SimpleRating({ onStartReview,id, voteAverage, voteCount }) {
   const classes = useStyles();
-  console.log('voteAverage', voteAverage)
   const [value, setValue] = React.useState(voteAverage);
-  console.log("value", value);
   return (
     <div>
       <Box
         className={classes.root}
-         component="fieldset"
+        component="fieldset"
         mb={3}
         borderColor="transparent"
       >
         <Rating
           onChange={(event, newValue) => {
             event.stopPropagation();
-            console.log("typeof newValue", typeof newValue);
-            console.log(" newValue",  newValue);
-            setValue(newValue);
+            onStartReview({userRating:newValue})
           }}
           precision={0.5}
-          // value={value}
-          name="controlled"
+          value={value}
+          name={id}
         />
         {/* <Typography component="legend">Read only</Typography> */}
         {voteCount ? (
