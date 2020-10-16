@@ -5,6 +5,7 @@ import "./App.css";
 import { SearchResults } from "./components/SearchResults";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import BooksList from "./components/BooksList";
+import Rating from "./components/Rating";
 import { NavContext } from "./components/context/NavContext";
 function App() {
   const [navContext] = useContext(NavContext);
@@ -13,7 +14,7 @@ function App() {
   return (
     <>
       <Router>
-        <div>whichPage = {appPage}</div>
+        <Rating voteAverage={null} voteCount={null}></Rating>
         <NavBar></NavBar>
         <div className="App">
           <Switch>

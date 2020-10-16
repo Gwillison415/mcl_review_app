@@ -7,18 +7,40 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    display: 'flex'
-  }
+    display: "flex",
+    // zIndex: 99,
+  },
 }));
 export default function SimpleRating({ voteAverage, voteCount }) {
   const classes = useStyles();
-  const rating = voteAverage / 2;
+  console.log('voteAverage', voteAverage)
+  const [value, setValue] = React.useState(voteAverage);
+  console.log("value", value);
   return (
-    <div className={classes.root}>
-      <Box component="fieldset" mb={3} borderColor="transparent">
-        <Rating precision={0.5} name="read-only" value={rating} readOnly />
+    <div>
+      <Box
+        className={classes.root}
+         component="fieldset"
+        mb={3}
+        borderColor="transparent"
+      >
+        <Rating
+          onChange={(event, newValue) => {
+            event.stopPropagation();
+            console.log("typeof newValue", typeof newValue);
+            console.log(" newValue",  newValue);
+            setValue(newValue);
+          }}
+          precision={0.5}
+          // value={value}
+          name="controlled"
+        />
         {/* <Typography component="legend">Read only</Typography> */}
-        <span> {voteCount} Reviews </span>
+        {voteCount ? (
+          <span> {voteCount} Reviews </span>
+        ) : (
+          <span> Be the first to review! </span>
+        )}
       </Box>
     </div>
   );
