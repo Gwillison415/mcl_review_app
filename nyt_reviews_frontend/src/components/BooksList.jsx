@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { gql, useQuery } from "@apollo/client";
-import { Divider } from '@material-ui/core';
 import MediaCard from "./MediaCard";
 import ProgressBar from "./ProgressBar";
 import { NavContext } from "./context/NavContext";

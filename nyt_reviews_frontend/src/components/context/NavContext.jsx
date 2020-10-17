@@ -23,6 +23,7 @@ const initialState = {
 };
 
 const navReducer = (state, action) => {
+  console.log('action.type', action.type)
   switch (action.type) {
     case "UPDATE_BOOK":
       return {
@@ -30,20 +31,22 @@ const navReducer = (state, action) => {
         ...action.payload,
       };
     case "REVIEW_BOOK":
-
       return {
         ...state,
         currentBook: { ...action.payload },
         appPage: action.appPage,
       };
-    case "START":
+    case "CHANGE_PAGE":
       return {
-        loading: true,
+        ...state,
+        appPage: action.appPage,
       };
-    case "COMPLETE":
+    case "CHANGE_PERSON":
       return {
-        loading: false,
+        ...state,
+        ...action.payload,
       };
+
     default:
       throw new Error();
   }

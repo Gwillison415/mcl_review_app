@@ -2,14 +2,13 @@ import React, { useContext } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
-import Button from "@material-ui/core/Button";
+import { Divider } from "@material-ui/core";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
-import { BrowserRouter as Router, Link } from "react-router-dom";
 import { NavContext } from "./context/NavContext";
 const useStyles = makeStyles({
   list: {
@@ -19,11 +18,29 @@ const useStyles = makeStyles({
     width: "auto",
   },
 });
-
+const knownUsers = [
+  { id: "ad533b8d-5812-4908-bf79-7bf82b66ed0d", name: "Taro" },
+  { id: "b026a43b-aa93-400e-b828-12968fdd5ad0", name: "Jane" },
+  { id: "81650738-c431-4598-a573-5407f9de7d34", name: "Grant" },
+];
 export default function SwipeableTempDrawer({ toggleDrawer, drawerState }) {
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
   const classes = useStyles();
-  const [appPage, setAppPage] = useContext(NavContext);
+  const [state, dispatch] = useContext(NavContext);
+
+  const setAppPage = (appPage) => {
+    console.log('appPage', appPage)
+    dispatch({
+      type: "CHANGE_PAGE",
+      appPage,
+    });
+  };
+  const setPerson = (person) => {
+    dispatch({
+      type: "CHANGE_PERSON",
+      payload:{user: person},
+    });
+  };
   const list = (anchor) => (
     <div
       className={clsx(classes.list, {
@@ -34,18 +51,32 @@ export default function SwipeableTempDrawer({ toggleDrawer, drawerState }) {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
+        {knownUsers.map(({ name, id }) => (
+          <ListItem onClick={()=>{setPerson({ name, id });}} button key={id}>
+            
+            <ListItemText primary={name} />
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
         {["About", "Reviews", "Books"].map((text, index) => {
-           text = text.toLowerCase();
+          text = text.toLowerCase();
           return (
-            <Link onClick={()=>{setAppPage(text)}} key={text} to={`/${text}`}>
-              <ListItem button>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            </Link>
-          );})}
+            <ListItem
+              onClick={() => {
+                setAppPage(text);
+              }}
+              button
+              key={index}
+            >
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          );
+        })}
       </List>
     </div>
   );
@@ -53,20 +84,20 @@ export default function SwipeableTempDrawer({ toggleDrawer, drawerState }) {
   return (
     <div>
       {/* <Router> */}
-        {["top"].map((anchor) => (
-          <React.Fragment key={anchor}>
-            <SwipeableDrawer
-              disableBackdropTransition={!iOS}
-              disableDiscovery={iOS}
-              anchor={anchor}
-              open={drawerState[anchor]}
-              onClose={toggleDrawer(anchor, false)}
-              onOpen={toggleDrawer(anchor, true)}
-            >
-              {list(anchor)}
-            </SwipeableDrawer>
-          </React.Fragment>
-        ))}
+      {["top"].map((anchor) => (
+        <React.Fragment key={anchor}>
+          <SwipeableDrawer
+            disableBackdropTransition={!iOS}
+            disableDiscovery={iOS}
+            anchor={anchor}
+            open={drawerState[anchor]}
+            onClose={toggleDrawer(anchor, false)}
+            onOpen={toggleDrawer(anchor, true)}
+          >
+            {list(anchor)}
+          </SwipeableDrawer>
+        </React.Fragment>
+      ))}
       {/* </Router> */}
     </div>
   );

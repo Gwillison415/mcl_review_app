@@ -218,7 +218,7 @@ export default function MediaCard({
               addReview({
                 variables: {
                   objects: [
-                    { ...formValues, user: { data: { id, name: user.name } } },
+                    { ...formValues, user: { data: { name: user.name } } },
                   ],
                 },
               });
