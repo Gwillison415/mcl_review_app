@@ -29,7 +29,6 @@ export default function SwipeableTempDrawer({ toggleDrawer, drawerState }) {
   const [state, dispatch] = useContext(NavContext);
 
   const setAppPage = (appPage) => {
-    console.log('appPage', appPage)
     dispatch({
       type: "CHANGE_PAGE",
       appPage,
@@ -38,7 +37,7 @@ export default function SwipeableTempDrawer({ toggleDrawer, drawerState }) {
   const setPerson = (person) => {
     dispatch({
       type: "CHANGE_PERSON",
-      payload:{user: person},
+      payload: { user: person },
     });
   };
   const list = (anchor) => (
@@ -52,8 +51,13 @@ export default function SwipeableTempDrawer({ toggleDrawer, drawerState }) {
     >
       <List>
         {knownUsers.map(({ name, id }) => (
-          <ListItem onClick={()=>{setPerson({ name, id });}} button key={id}>
-            
+          <ListItem
+            onClick={() => {
+              setPerson({ name, id });
+            }}
+            button
+            key={id}
+          >
             <ListItemText primary={name} />
           </ListItem>
         ))}
