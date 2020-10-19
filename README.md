@@ -16,12 +16,12 @@ It gave me access to 'SwipeableDrawer' which is optimized for mobile screens.
 I went with the standard flex box design provided by material, such that it works out of the box on multiple breakpoints. 
 I strive to learn something every time, so instead of using redux to create a global state container I leveraged my knowledge to learn / implement the Context API for the first time.
 
-Debouncing results was a challenge for me. I strongly considered redux-saga for debouncing the search bar that Displays visual results as the user types.  In the end I couldn't justify it's overhead / 'wetwear cost' when compared with ```React.useCallback + lodash/debounce``` to create ```debounceHandleSearch``` in just a few lines. I might make different decisions on a larger app where more was going on, but I always need to consider KISS if possible and make it more straightforward on other developers. 
+Debouncing results was a challenge for me. I strongly considered redux-saga for debouncing the search bar that Displays visual results as the user types.  In the end I couldn't justify it's overhead / 'wetwear cost' when compared with ```React.useCallback + lodash/debounce``` to create ```debounceHandleSearch``` in just a few lines. I might make different 'separation of concerns' decisions on a larger app where more was going on, but I always need to consider KISS if possible and make it more straightforward on other developers. 
 
-Apollo client is the gold standard of GQL clients, so I used it in basic form to highlight best practices: separation of concerns / code organization / DRY patterns
+Apollo client is the gold standard of GQL clients, so I used it in basic form to highlight best practices:  
 
-Speaking of DRY - I separated components where they made logical sense to do so by considering other consumer use cases and their data structures.  I did not focus on my component folder structure for a couple important reasons. 
-* I think clean code is a must, but developers need to be laser focused on other's experiences - not your own.
+DRY patterns- I separated components where they made logical sense to do so by considering other consumer use cases and their data structures. I focused energy on the <MediaCard/> & <Rating/> where you would potentially use it in different contexts, passing different props & functions as props.  I explicitly did not focus on my component folder structure /  for a couple important reasons. 
+* I think clean code / code organization is a must, but developers need to be laser focused on the experiences of their users- not prioritize your own.
 * It's often more important to get things up and moving faster, and consider more perfect solutions as they mature, clarify and the intention settles.
  ## The back end 
  We're thinking about how to model the data and what type of tooling helps set us up for the short term and where feasible, also  the long term.
