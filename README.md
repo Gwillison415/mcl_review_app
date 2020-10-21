@@ -45,11 +45,11 @@ This Docker Compose setup runs [Hasura GraphQL Engine](https://github.com/hasura
 ## Usage
 
 - Clone this portion of the repo on a machine where you'd like to deploy graphql engine
-- `docker-compose up -d`
 
 GraphQL endpoint will be `http://localhost:8080/v1/graphql`
 Console will be available on `http://localhost:8080/console`
-    `cd nyt_reviews_backend/ && docker-compose up -d`
+    - `cd nyt_reviews_backend/ && docker-compose up -d`
+    - `hasura migrate apply`
 
 
 composeable components, semi-independent of direct need
@@ -59,10 +59,10 @@ composeable components, semi-independent of direct need
 
 In the project directory, you can run:
 
-### `yarn start`
+- `cd nyt_reviews_frontend/ && yarn && yarn start`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser. This is currently configure to only 'talk' to a local api instance.
+This Runs the app in the development mode.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser. This is currently configured to only 'talk' to a local api instance.
 
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
