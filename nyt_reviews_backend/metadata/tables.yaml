@@ -1,12 +1,8 @@
 - table:
     schema: public
     name: books
-  object_relationships:
-  - name: review
-    using:
-      foreign_key_constraint_on: id
   array_relationships:
-  - name: reviews_by_book
+  - name: reviews
     using:
       manual_configuration:
         remote_table:
@@ -18,24 +14,12 @@
     schema: public
     name: reviews
   object_relationships:
-  - name: book
-    using:
-      manual_configuration:
-        remote_table:
-          schema: public
-          name: books
-        column_mapping:
-          rating_id: id
   - name: user
     using:
       foreign_key_constraint_on: rating_id
 - table:
     schema: public
     name: users
-  object_relationships:
-  - name: review
-    using:
-      foreign_key_constraint_on: id
   array_relationships:
   - name: reviews
     using:
